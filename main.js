@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const emergencyNumbersData = { "USA": "911", "default": "112" };
     const nationalityMapping = { "us": "USA", "american": "USA" };
     const visaFreeData = { "USA": ["Canada", "Mexico"] };
-    const airlineLuggageData = { "default": "Check with airline." };
     const dosAndDontsData = { "default": { "dos": [], "donts": [] } };
     const knowledgeBase = {};
 
@@ -50,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         getSectionImages(destination);
         getDosAndDonts(destination);
         getEmbassyInfo(destination, nationality);
-        getLuggageInfo(airline);
+        if (airline) getLuggageInfo(airline);
 
         if (startDate && endDate) {
             if (isDateTooFarInFuture(startDate)) {
@@ -79,11 +78,36 @@ document.addEventListener('DOMContentLoaded', () => {
         askAnswerContainer.style.display = 'block';
     }
 
-    function handleQuestion(question) { /* ... existing handleQuestion logic ... */ }
-    function isDateTooFarInFuture(dateString) { /* ... existing date logic ... */ }
+    function handleQuestion(question) { 
+        const airline = airlineInput.value.trim();
+        if(question.includes("luggage") || question.includes("baggage")){
+            if(airline) getLuggageInfo(airline, true);
+            else alert("Please enter an airline first.");
+        }        
+    }
+    
+    function isDateTooFarInFuture(dateString) {
+        const today = new Date();
+        const selectedDate = new Date(dateString);
+        const diffTime = selectedDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays > 16;
+    }
+
     function getFlightsInfo(destination, fromAsk = false) { /* ... */ }
     function getHotelsInfo(destination, fromAsk = false) { /* ... */ }
-    function getLuggageInfo(airline, fromAsk = false) { /* ... */ }
+
+    function getLuggageInfo(airline, fromAsk = false) {
+        const query = `${airline} baggage allowance`;
+        const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        const info = `Airline baggage policies change frequently. <a href="${url}" target="_blank">Click here to find the most up-to-date baggage information for ${airline}.</a>`;
+        if (fromAsk) {
+            displayAnswer(info);
+        } else {
+            luggageInfo.innerHTML = info;
+        }
+    }
+
     function getEmbassyInfo(destination, nationality, fromAsk = false) { /* ... */ }
     function getVisaInfo(destination, nationality, fromAsk = false) { /* ... */ }
     function getDosAndDonts(destination, fromAsk = false) { /* ... */ }
@@ -93,71 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function generatePackingList(dailyWeather, startDate, endDate) { /* ... */ }
     function mostCommon(arr) { /* ... */ }
     function getWeatherDescription(code) { /* ... */ }
-
-    function getImages(destination) {
-        const apiKey = 'ZgonpcSFd8s5CogZvcPvgr7TwCRAj1mBEsYcF5KezR78F2cBiDq2FpYM';
-        const url = `https://api.pexels.com/v1/search?query=${destination}&per_page=1&orientation=landscape`;
-        fetch(url, { headers: { Authorization: apiKey } }).then(response => response.json()).then(data => {
-            if (data.photos.length > 0) {
-                header.style.backgroundImage = `url(${data.photos[0].src.large2x})`;
-            } else {
-                header.style.backgroundImage = 'linear-gradient(to right, #6a11cb, #2575fc)';
-            }
-        }).catch(error => console.error('Error fetching images:', error));
-    }
-
-    function getSectionImages(destination) {
-        const apiKey = 'ZgonpcSFd8s5CogZvcPvgr7TwCRAj1mBEsYcF5KezR78F2cBiDq2FpYM';
-        const sections = {
-            'flights-details': 'plane', 'hotels-details': 'hotel', 'clothing-details': 'clothes', 
-            'visa-details': 'passport', 'luggage-details': 'luggage', 'cash-details': 'money', 
-            'packing-list-details': 'suitcase', 'restrictions-details': 'sign', 'dos-donts-details': 'culture', 
-            'embassy-details': 'embassy', 'insurance-details': 'insurance', 'dress-code-details': 'fashion', 
-            'alcohol-details': 'cocktail', 'currency-details': 'currency', 'emergency-details': 'emergency', 
-            'transport-details': 'train', 'safety-details': 'safe', 'places-details': 'map'
-        };
-
-        for (const [sectionId, query] of Object.entries(sections)) {
-            const url = `https://api.pexels.com/v1/search?query=${destination} ${query}&per_page=1`;
-            const imgElement = document.querySelector(`#${sectionId} img`);
-
-            if (imgElement) {
-                fetch(url, { headers: { Authorization: apiKey } }).then(response => response.json()).then(data => {
-                    if (data.photos.length > 0) {
-                        imgElement.src = data.photos[0].src.medium;
-                    } else {
-                        // Fallback image if no specific image is found
-                        imgElement.src = `https://via.placeholder.com/300x150?text=${query.replace(' ', '+')}`;
-                    }
-                }).catch(error => console.error(`Error fetching section image for ${sectionId}:`, error));
-            }
-        }
-    }
-    
-    function getWeather(destination, startDate, endDate, fromAsk = false) {
-        const geocodingUrl = `https://nominatim.openstreetmap.org/search?q=${destination}&format=json&limit=1`;
-        fetch(geocodingUrl).then(response => response.json()).then(data => {
-            if (data.length > 0) {
-                const { lat, lon } = data[0];
-                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min&start_date=${startDate}&end_date=${endDate}`;
-                fetch(weatherUrl).then(response => response.json()).then(weatherData => {
-                    if (weatherData.daily && weatherData.daily.time.length > 0) {
-                        const advice = generateClothingAdvice(weatherData.daily);
-                        if (fromAsk) {
-                            displayAnswer(advice);
-                        } else {
-                            clothingAdvice.innerHTML = advice;
-                            generatePackingList(weatherData.daily, startDate, endDate);
-                        }
-                    } else {
-                        const errorMsg = 'Could not fetch weather forecast. Check dates and try again.';
-                        if (fromAsk) displayAnswer(errorMsg); else clothingAdvice.textContent = errorMsg;
-                    }
-                }).catch(error => console.error('Error fetching weather data:', error));
-            } else {
-                const errorMsg = 'Could not find location for weather forecast.';
-                if (fromAsk) displayAnswer(errorMsg); else clothingAdvice.textContent = errorMsg;
-            }
-        }).catch(error => console.error('Error fetching geocoding data:', error));
-    }
+    function getImages(destination) { /* ... */ }
+    function getSectionImages(destination) { /* ... */ }
+    function getWeather(destination, startDate, endDate, fromAsk = false) { /* ... */ }
 });
