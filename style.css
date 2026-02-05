@@ -1,69 +1,98 @@
 :root {
-    --bg-color: #f4f7f6;
-    --text-color: #333;
-    --header-text-color: white;
-    --header-bg-start: #6a11cb;
-    --header-bg-end: #2575fc;
+    --body-bg-color: #f4f7f6;
     --card-bg-color: white;
-    --box-shadow-color: rgba(0,0,0,0.05);
-    --input-border-color: #ccc;
-    --input-bg-color: white;
-    --button-primary-bg: #2575fc;
-    --button-primary-color: white;
-    --button-secondary-bg: #6a11cb;
-    --button-secondary-color: white;
+    --text-color: #333;
+    --header-gradient-start: #6a11cb;
+    --header-gradient-end: #2575fc;
+    --button-bg-color: #2575fc;
+    --ask-btn-bg-color: #6a11cb;
 }
 
-body.night-mode {
-    --bg-color: #2b2b2b;
-    --text-color: #e0e0e0;
-    --header-text-color: #e0e0e0;
-    --header-bg-start: #3a0b6e;
-    --header-bg-end: #1a4a9b;
-    --card-bg-color: #3c3c3c;
-    --box-shadow-color: rgba(0,0,0,0.3);
-    --input-border-color: #555;
-    --input-bg-color: #444;
-    --button-primary-bg: #1a4a9b;
-    --button-secondary-bg: #3a0b6e;
+[data-theme="dark"] {
+    --body-bg-color: #1a1a1a;
+    --card-bg-color: #2a2a2a;
+    --text-color: #f4f7f6;
+    --header-gradient-start: #2575fc;
+    --header-gradient-end: #6a11cb;
+    --button-bg-color: #6a11cb;
+    --ask-btn-bg-color: #2575fc;
 }
 
 body {
     font-family: sans-serif;
     margin: 0;
-    background-color: var(--bg-color);
+    background-color: var(--body-bg-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
 }
 
 header {
-    background-image: linear-gradient(to right, var(--header-bg-start), var(--header-bg-end));
-    color: var(--header-text-color);
+    background-image: linear-gradient(to right, var(--header-gradient-start), var(--header-gradient-end));
+    color: white;
     padding: 3rem 1rem;
     text-align: center;
     background-size: cover;
     background-position: center;
-    transition: background-image 1s ease-in-out, background-color 0.3s, color 0.3s;
-    position: relative; /* For positioning the toggle button */
+    transition: background-image 1s ease-in-out;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 2.5rem;
+.header-content {
+    text-align: left;
 }
 
-.mode-toggle-button {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background-color: var(--button-secondary-bg);
-    color: var(--button-secondary-color);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 34px;
+    position: relative;
+    width: 60px;
+}
+
+.theme-switch input { display: none; }
+
+.slider {
+    background-color: #ccc;
+    bottom: 0;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s, color 0.3s;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+
+.slider:before {
+    background-color: #fff;
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 26px;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }
 
 main {
@@ -79,16 +108,14 @@ main {
 
 .travel-inputs input, .travel-inputs button {
     padding: 0.8rem;
-    border: 1px solid var(--input-border-color);
+    border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
-    background-color: var(--input-bg-color);
-    color: var(--text-color);
 }
 
 .travel-inputs button {
-    background-color: var(--button-primary-bg);
-    color: var(--button-primary-color);
+    background-color: var(--button-bg-color);
+    color: white;
     cursor: pointer;
 }
 
@@ -101,17 +128,15 @@ main {
 .ask-question input {
     flex-grow: 1;
     padding: 0.8rem;
-    border: 1px solid var(--input-border-color);
+    border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
-    background-color: var(--input-bg-color);
-    color: var(--text-color);
 }
 
 .ask-question button {
     padding: 0.8rem 1.5rem;
-    background-color: var(--button-secondary-bg);
-    color: var(--button-secondary-color);
+    background-color: var(--ask-btn-bg-color);
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -119,14 +144,13 @@ main {
 
 #ask-answer-container {
     background-color: var(--card-bg-color);
-    border: 1px solid var(--input-border-color);
+    border: 1px solid #ddd;
     border-radius: 8px;
     padding: 1.5rem;
     margin-top: 1rem;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 12px var(--box-shadow-color);
-    display: none; /* Hidden by default */
-    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: none; 
 }
 
 .faq-container {
@@ -139,8 +163,15 @@ main {
     background-color: var(--card-bg-color);
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 4px 12px var(--box-shadow-color);
-    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.faq-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
 }
 
 .faq-item h3 {
