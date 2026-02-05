@@ -3,15 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toto Number Generator</title>
+    <title>Travel Q&A</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Toto Number Generator</h1>
-        <button id="generate-btn">Generate Numbers</button>
-        <div id="numbers-container"></div>
-    </div>
+    <header>
+        <h1>Your Travel Questions, Answered</h1>
+        <p>Everything you need to know for your next trip</p>
+    </header>
+    <main>
+        <div class="travel-inputs">
+            <input type="text" id="destination" placeholder="Enter city or country">
+            <input type="text" id="nationality" placeholder="Enter your nationality">
+            <input type="text" id="start-date" placeholder="Start Date (YYYY-MM-DD)">
+            <input type="text" id="end-date" placeholder="End Date (YYYY-MM-DD)">
+            <button id="get-advice-btn">Get Advice</button>
+        </div>
+
+        <div class="ask-question">
+            <input type="text" id="question-input" placeholder="Ask a question...">
+            <button id="ask-btn">Ask</button>
+        </div>
+        <div id="ask-answer-container"></div>
+
+        <div class="faq-container">
+            <div class="faq-item" id="flights-details">
+                <h3>Flights</h3>
+                <p id="flights-info">Enter your destination and dates to see flight information.</p>
+            </div>
+            <div class="faq-item" id="hotels-details">
+                <h3>Hotels</h3>
+                <p id="hotels-info">Enter your destination to see hotel information.</p>
+            </div>
+            <div class="faq-item" id="clothing-details">
+                <h3>What to Wear</h3>
+                <p id="clothing-advice">Enter your destination and dates to get clothing recommendations.</p>
+            </div>
+            <div class="faq-item" id="visa-details">
+                <h3>Visa Restrictions</h3>
+                <p id="visa-info">Enter your destination and nationality to see visa requirements.</p>
+            </div>
+            <div class="faq-item" id="luggage-details">
+                <h3>Luggage Restrictions</h3>
+                <p id="luggage-info">Luggage allowances and restrictions are set by the airlines. Check with your airline for specific rules on baggage weight, dimensions, and prohibited items. Generally, liquids in carry-on luggage should be in containers of 100ml or less.</p>
+            </div>
+            <div class="faq-item" id="cash-details">
+                <h3>Cash Allowance</h3>
+                <p id="cash-info">Most countries have regulations on the amount of cash you can carry across their borders without declaring it. This amount is typically around $10,000 USD, but it can vary. Check the customs website of your destination country for specific regulations.</p>
+            </div>
+            <div class="faq-item" id="packing-list-details">
+                <h3>Packing List</h3>
+                <div id="packing-list"></div>
+            </div>
+            <div class="faq-item" id="restrictions-details">
+                <h3>Travel Restrictions</h3>
+                <p id="restrictions-info">Stay updated on the latest travel advisories and entry requirements. Check the official government websites of your destination country for the most current information on visa policies, COVID-19 protocols, and other travel restrictions.</p>
+            </div>
+            <div class="faq-item" id="dos-donts-details">
+                <h3>Dos and Don'ts</h3>
+                <p id="dos-donts-info">Respect local customs and traditions. Do learn a few basic phrases in the local language. Don't engage in public displays of affection in conservative areas. Do be mindful of your attire, especially when visiting religious sites.</p>
+            </div>
+            <div class="faq-item" id="dress-code-details">
+                <h3>Dress Code</h3>
+                <p id="dress-code-info">Dress modestly, especially when visiting religious sites. In general, casual and comfortable clothing is acceptable for most tourist areas. For upscale restaurants or events, a smart casual dress code is often expected.</p>
+            </div>
+            <div class="faq-item" id="alcohol-details">
+                <h3>Alcohol Consumption</h3>
+                <p id="alcohol-info">The laws and social norms regarding alcohol consumption vary widely. In some countries, alcohol is readily available, while in others, it is restricted or prohibited. Be aware of the local laws to avoid any legal issues.</p>
+            </div>
+            <div class="faq-item" id="currency-details">
+                <h3>Currency</h3>
+                <p id="currency-info">Enter your destination to get currency information.</p>
+            </div>
+            <div class="faq-item" id="emergency-details">
+                <h3>Emergency Numbers</h3>
+                <p id="emergency-numbers">Enter your destination to get emergency numbers.</p>
+            </div>
+            <div class="faq-item" id="transport-details">
+                <h3>Transportation Options</h3>
+                <p id="transport-info">Most destinations offer a variety of transportation options, including public transit (buses, trains, subways), taxis, and ride-sharing services. For more flexibility, you might consider renting a car.</p>
+            </div>
+            <div class="faq-item" id="safety-details">
+                <h3>Safety</h3>
+                <p id="safety-info">Stay aware of your surroundings and take precautions to protect your belongings. Avoid walking alone at night in unfamiliar areas. It's also a good idea to have travel insurance that covers medical emergencies and trip cancellations.</p>
+            </div>
+            <div class="faq-item" id="places-details">
+                <h3>Places to Go</h3>
+                <p id="places-info">Explore a mix of popular tourist attractions and off-the-beaten-path gems. Research in advance to create an itinerary that matches your interests, whether it's historical sites, natural wonders, or culinary experiences.</p>
+            </div>
+        </div>
+    </main>
     <script src="main.js"></script>
 </body>
 </html>
