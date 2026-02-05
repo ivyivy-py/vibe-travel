@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hotelsInfo = document.getElementById('hotels-info');
     const visaInfo = document.getElementById('visa-info');
     const packingList = document.getElementById('packing-list');
+    const dosDontsInfo = document.getElementById('dos-donts-info');
     const askAnswerContainer = document.getElementById('ask-answer-container');
 
     const emergencyNumbersData = {
@@ -42,12 +43,56 @@ document.addEventListener('DOMContentLoaded', () => {
         "Germany": ["France", "United Kingdom", "Italy", "Spain"],
         "France": ["Germany", "United Kingdom", "Italy", "Spain"]
     };
+    
+    const dosAndDontsData = {
+        "japan": {
+            "dos": [
+                "Bow when greeting someone.",
+                "Slurp your noodles; it shows appreciation.",
+                "Use the provided wet towel to clean your hands before eating.",
+                "Carry your trash with you as public bins are rare."
+            ],
+            "donts": [
+                "Don't tip. It can be considered rude.",
+                "Don't wear shoes inside homes or traditional establishments.",
+                "Don't talk loudly on public transportation.",
+                "Don't stick your chopsticks upright in your rice."
+            ]
+        },
+        "italy": {
+            "dos": [
+                "Greet people with 'buongiorno' (good morning) or 'buonasera' (good evening).",
+                "Expect to pay a 'coperto' (cover charge) at many restaurants.",
+                "Embrace the 'aperitivo' culture in the early evening.",
+                "Dress smartly, especially when visiting churches."
+            ],
+            "donts": [
+                "Don't order a cappuccino after 11 AM.",
+                "Don't expect a large breakfast; a coffee and pastry is typical.",
+                "Don't put cheese on a seafood pasta dish.",
+                "Don't rush your meals; enjoy the experience."
+            ]
+        },
+        "default": {
+            "dos": [
+                "Learn a few basic phrases in the local language.",
+                "Be mindful of your attire, especially when visiting religious sites.",
+                "Try the local cuisine.",
+                "Be open to new experiences and cultures."
+            ],
+            "donts": [
+                "Don't assume everyone speaks English.",
+                "Don't engage in public displays of affection in conservative areas.",
+                "Don't be afraid to ask for directions.",
+                "Don't disrespect local customs or traditions."
+            ]
+        }
+    };
 
     const knowledgeBase = {
         "luggage": "Luggage allowances are set by airlines. Check with your airline for specific rules on weight, dimensions, and prohibited items. Generally, liquids in carry-on luggage should be in containers of 100ml or less.",
         "cash": "Most countries regulate the amount of cash you can carry across their borders without declaring it. This is typically around $10,000 USD, but can vary. Check the customs website of your destination for specifics.",
         "restrictions": "Stay updated on the latest travel advisories and entry requirements by checking the official government websites of your destination country.",
-        "dos and don'ts": "Respect local customs. Learn a few basic phrases in the local language. Don't engage in public displays of affection in conservative areas. Be mindful of your attire, especially when visiting religious sites.",
         "dress code": "Dress modestly, especially when visiting religious sites. Casual and comfortable clothing is usually acceptable for tourist areas. For upscale restaurants, smart casual is often expected.",
         "alcohol": "Laws and social norms regarding alcohol vary widely. In some countries, it is readily available, while in others, it is restricted or prohibited. Be aware of local laws.",
         "transport": "Most destinations offer public transit (buses, trains), taxis, and ride-sharing services. For more flexibility, consider renting a car.",
@@ -73,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         getHotelsInfo(destination);
         getVisaInfo(destination, nationality);
         getImages(destination);
+        getDosAndDonts(destination);
 
         if (startDate && endDate) {
             if (isDateTooFarInFuture(startDate)) {
@@ -112,14 +158,14 @@ document.addEventListener('DOMContentLoaded', () => {
             "money": getCountryInfo,
             "emergency": getEmergencyNumbers,
             "help": getEmergencyNumbers,
+            "dos": getDosAndDonts,
+            "don'ts": getDosAndDonts,
+            "etiquette": getDosAndDonts,
             // Knowledge Base keywords
             "luggage": () => displayAnswer(knowledgeBase.luggage),
             "baggage": () => displayAnswer(knowledgeBase.luggage),
             "cash": () => displayAnswer(knowledgeBase.cash),
             "restriction": () => displayAnswer(knowledgeBase.restrictions),
-            "dos": () => displayAnswer(knowledgeBase["dos and don'ts"]),
-            "don'ts": () => displayAnswer(knowledgeBase["dos and don'ts"]),
-            "etiquette": () => displayAnswer(knowledgeBase["dos and don'ts"]),
             "dress code": () => displayAnswer(knowledgeBase["dress code"]),
             "alcohol": () => displayAnswer(knowledgeBase.alcohol),
             "drink": () => displayAnswer(knowledgeBase.alcohol),
@@ -188,6 +234,12 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 getHotelsInfo(destination, true);
             }
+        } else if (action === getDosAndDonts) {
+            if (!destination) {
+                alert('To get cultural advice, please enter a destination first.');
+            } else {
+                getDosAndDonts(destination, true);
+            }
         } else {
             action(); // For knowledge base entries
         }
@@ -233,6 +285,30 @@ document.addEventListener('DOMContentLoaded', () => {
             displayAnswer(info);
         } else {
             visaInfo.innerHTML = info;
+        }
+    }
+
+    function getDosAndDonts(destination, fromAsk = false) {
+        const lowerDestination = destination.toLowerCase();
+        let advice = dosAndDontsData.default;
+
+        for (const country in dosAndDontsData) {
+            if (lowerDestination.includes(country)) {
+                advice = dosAndDontsData[country];
+                break;
+            }
+        }
+        
+        let info = '<strong>Dos:</strong><ul>';
+        advice.dos.forEach(item => { info += `<li>${item}</li>`; });
+        info += '</ul><strong>Don\'ts:</strong><ul>';
+        advice.donts.forEach(item => { info += `<li>${item}</li>`; });
+        info += '</ul>';
+
+        if (fromAsk) {
+            displayAnswer(info);
+        } else {
+            dosDontsInfo.innerHTML = info;
         }
     }
 
