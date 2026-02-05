@@ -8,6 +8,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionInput = document.getElementById('question-input');
     const header = document.querySelector('header');
 
+    // Night/Day Mode Implementation
+    const modeToggleBtn = document.getElementById('mode-toggle');
+    const body = document.body;
+
+    const applyTheme = (isNight) => {
+        if (isNight) {
+            body.classList.add('night-mode');
+            modeToggleBtn.textContent = 'Day Mode';
+        } else {
+            body.classList.remove('night-mode');
+            modeToggleBtn.textContent = 'Night Mode';
+        }
+    };
+
+    // Load saved theme from localStorage or default to day mode
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'night') {
+        applyTheme(true);
+    } else {
+        applyTheme(false); // Default to day mode if no preference or 'day'
+    }
+
+    modeToggleBtn.addEventListener('click', () => {
+        const isNight = body.classList.toggle('night-mode');
+        localStorage.setItem('theme', isNight ? 'night' : 'day');
+        modeToggleBtn.textContent = isNight ? 'Day Mode' : 'Night Mode';
+    });
+    // End Night/Day Mode Implementation
+
     const clothingAdvice = document.getElementById('clothing-advice');
     const currencyInfo = document.getElementById('currency-info');
     const emergencyNumbers = document.getElementById('emergency-numbers');

@@ -1,22 +1,69 @@
+:root {
+    --bg-color: #f4f7f6;
+    --text-color: #333;
+    --header-text-color: white;
+    --header-bg-start: #6a11cb;
+    --header-bg-end: #2575fc;
+    --card-bg-color: white;
+    --box-shadow-color: rgba(0,0,0,0.05);
+    --input-border-color: #ccc;
+    --input-bg-color: white;
+    --button-primary-bg: #2575fc;
+    --button-primary-color: white;
+    --button-secondary-bg: #6a11cb;
+    --button-secondary-color: white;
+}
+
+body.night-mode {
+    --bg-color: #2b2b2b;
+    --text-color: #e0e0e0;
+    --header-text-color: #e0e0e0;
+    --header-bg-start: #3a0b6e;
+    --header-bg-end: #1a4a9b;
+    --card-bg-color: #3c3c3c;
+    --box-shadow-color: rgba(0,0,0,0.3);
+    --input-border-color: #555;
+    --input-bg-color: #444;
+    --button-primary-bg: #1a4a9b;
+    --button-secondary-bg: #3a0b6e;
+}
+
 body {
     font-family: sans-serif;
     margin: 0;
-    background-color: #f4f7f6;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 header {
-    background-image: linear-gradient(to right, #6a11cb, #2575fc);
-    color: white;
+    background-image: linear-gradient(to right, var(--header-bg-start), var(--header-bg-end));
+    color: var(--header-text-color);
     padding: 3rem 1rem;
     text-align: center;
     background-size: cover;
     background-position: center;
-    transition: background-image 1s ease-in-out;
+    transition: background-image 1s ease-in-out, background-color 0.3s, color 0.3s;
+    position: relative; /* For positioning the toggle button */
 }
 
 header h1 {
     margin: 0;
     font-size: 2.5rem;
+}
+
+.mode-toggle-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 main {
@@ -32,14 +79,16 @@ main {
 
 .travel-inputs input, .travel-inputs button {
     padding: 0.8rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border-color);
     border-radius: 5px;
     font-size: 1rem;
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
 }
 
 .travel-inputs button {
-    background-color: #2575fc;
-    color: white;
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-color);
     cursor: pointer;
 }
 
@@ -52,29 +101,32 @@ main {
 .ask-question input {
     flex-grow: 1;
     padding: 0.8rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border-color);
     border-radius: 5px;
     font-size: 1rem;
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
 }
 
 .ask-question button {
     padding: 0.8rem 1.5rem;
-    background-color: #6a11cb;
-    color: white;
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-color);
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
 #ask-answer-container {
-    background-color: white;
-    border: 1px solid #ddd;
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--input-border-color);
     border-radius: 8px;
     padding: 1.5rem;
     margin-top: 1rem;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px var(--box-shadow-color);
     display: none; /* Hidden by default */
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
 .faq-container {
@@ -84,15 +136,16 @@ main {
 }
 
 .faq-item {
-    background-color: white;
+    background-color: var(--card-bg-color);
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px var(--box-shadow-color);
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .faq-item h3 {
     margin-top: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 #packing-list ul {
