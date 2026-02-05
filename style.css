@@ -142,7 +142,7 @@ main {
     cursor: pointer;
 }
 
-#ask-answer-container {
+#ask-answer-container, #feedback-form-container {
     background-color: var(--card-bg-color);
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -150,7 +150,33 @@ main {
     margin-top: 1rem;
     margin-bottom: 2rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    display: none; 
+}
+
+#feedback-form-container {
+    display: none;
+}
+
+#feedback-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+#feedback-form input, #feedback-form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#feedback-form button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: var(--button-bg-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .faq-container {

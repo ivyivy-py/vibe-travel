@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const getAdviceBtn = document.getElementById('get-advice-btn');
     const askBtn = document.getElementById('ask-btn');
+    const talkToAgentBtn = document.getElementById('talk-to-agent-btn');
     const destinationInput = document.getElementById('destination');
     const nationalityInput = document.getElementById('nationality');
     const startDateInput = document.getElementById('start-date');
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const embassyInfo = document.getElementById('embassy-info');
     const luggageInfo = document.getElementById('luggage-info');
     const askAnswerContainer = document.getElementById('ask-answer-container');
+    const feedbackFormContainer = document.getElementById('feedback-form-container');
 
     const emergencyNumbersData = {
         "USA": "911", "United Kingdom": "999", "Canada": "911", "Australia": "000",
@@ -93,6 +95,10 @@ document.addEventListener('DOMContentLoaded', () => {
     askBtn.addEventListener('click', () => {
         const question = questionInput.value.toLowerCase().trim();
         if (question) handleQuestion(question);
+    });
+
+    talkToAgentBtn.addEventListener('click', () => {
+        feedbackFormContainer.style.display = 'block';
     });
 
     themeToggle.addEventListener('change', () => {
