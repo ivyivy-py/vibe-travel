@@ -5,37 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const nationalityInput = document.getElementById('nationality');
     const startDateInput = document.getElementById('start-date');
     const endDateInput = document.getElementById('end-date');
+    const airlineInput = document.getElementById('airline');
     const questionInput = document.getElementById('question-input');
     const header = document.querySelector('header');
-
-    // Night/Day Mode Implementation
-    const modeToggleBtn = document.getElementById('mode-toggle');
-    const body = document.body;
-
-    const applyTheme = (isNight) => {
-        if (isNight) {
-            body.classList.add('night-mode');
-            modeToggleBtn.textContent = 'Day Mode';
-        } else {
-            body.classList.remove('night-mode');
-            modeToggleBtn.textContent = 'Night Mode';
-        }
-    };
-
-    // Load saved theme from localStorage or default to day mode
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'night') {
-        applyTheme(true);
-    } else {
-        applyTheme(false); // Default to day mode if no preference or 'day'
-    }
-
-    modeToggleBtn.addEventListener('click', () => {
-        const isNight = body.classList.toggle('night-mode');
-        localStorage.setItem('theme', isNight ? 'night' : 'day');
-        modeToggleBtn.textContent = isNight ? 'Day Mode' : 'Night Mode';
-    });
-    // End Night/Day Mode Implementation
 
     const clothingAdvice = document.getElementById('clothing-advice');
     const currencyInfo = document.getElementById('currency-info');
@@ -45,16 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const visaInfo = document.getElementById('visa-info');
     const packingList = document.getElementById('packing-list');
     const dosDontsInfo = document.getElementById('dos-donts-info');
+    const embassyInfo = document.getElementById('embassy-info');
+    const luggageInfo = document.getElementById('luggage-info');
     const askAnswerContainer = document.getElementById('ask-answer-container');
 
     const emergencyNumbersData = {
-        "USA": "911",
-        "United Kingdom": "999",
-        "Canada": "911",
-        "Australia": "000",
-        "New Zealand": "111",
-        "India": "112",
-        "default": "112 or 911"
+        "USA": "911", "United Kingdom": "999", "Canada": "911", "Australia": "000",
+        "New Zealand": "111", "India": "112", "default": "112 or 911"
     };
 
     const nationalityMapping = {
@@ -72,62 +41,41 @@ document.addEventListener('DOMContentLoaded', () => {
         "Germany": ["France", "United Kingdom", "Italy", "Spain"],
         "France": ["Germany", "United Kingdom", "Italy", "Spain"]
     };
-    
+
+    const airlineLuggageData = {
+        "american airlines": "1 carry-on bag and 1 personal item. Checked bags: 23kg weight limit.",
+        "delta": "1 carry-on bag and 1 personal item. Checked bags: 23kg weight limit.",
+        "united": "1 carry-on bag and 1 personal item. Basic Economy may have different rules. Checked bags: 23kg weight limit.",
+        "ryanair": "1 small personal bag. Larger carry-on and checked bags must be paid for.",
+        "easyjet": "1 small cabin bag. Larger cabin bag and checked bags must be paid for.",
+        "default": "Most airlines allow 1 carry-on and 1 personal item. Check with your airline for specific weight and size limits."
+    };
+
     const dosAndDontsData = {
         "japan": {
-            "dos": [
-                "Bow when greeting someone.",
-                "Slurp your noodles; it shows appreciation.",
-                "Use the provided wet towel to clean your hands before eating.",
-                "Carry your trash with you as public bins are rare."
-            ],
-            "donts": [
-                "Don't tip. It can be considered rude.",
-                "Don't wear shoes inside homes or traditional establishments.",
-                "Don't talk loudly on public transportation.",
-                "Don't stick your chopsticks upright in your rice."
-            ]
+            "dos": ["Bow when greeting someone.", "Slurp your noodles."],
+            "donts": ["Don't tip.", "Don't wear shoes inside homes."]
         },
         "italy": {
-            "dos": [
-                "Greet people with 'buongiorno' (good morning) or 'buonasera' (good evening).",
-                "Expect to pay a 'coperto' (cover charge) at many restaurants.",
-                "Embrace the 'aperitivo' culture in the early evening.",
-                "Dress smartly, especially when visiting churches."
-            ],
-            "donts": [
-                "Don't order a cappuccino after 11 AM.",
-                "Don't expect a large breakfast; a coffee and pastry is typical.",
-                "Don't put cheese on a seafood pasta dish.",
-                "Don't rush your meals; enjoy the experience."
-            ]
+            "dos": ["Greet people with 'buongiorno'.", "Embrace 'aperitivo' culture."],
+            "donts": ["Don't order a cappuccino after 11 AM.", "Don't put cheese on seafood pasta."]
         },
         "default": {
-            "dos": [
-                "Learn a few basic phrases in the local language.",
-                "Be mindful of your attire, especially when visiting religious sites.",
-                "Try the local cuisine.",
-                "Be open to new experiences and cultures."
-            ],
-            "donts": [
-                "Don't assume everyone speaks English.",
-                "Don't engage in public displays of affection in conservative areas.",
-                "Don't be afraid to ask for directions.",
-                "Don't disrespect local customs or traditions."
-            ]
+            "dos": ["Learn basic local phrases.", "Try local cuisine."],
+            "donts": ["Don't assume everyone speaks English.", "Don't disrespect local customs."]
         }
     };
 
     const knowledgeBase = {
-        "luggage": "Luggage allowances are set by airlines. Check with your airline for specific rules on weight, dimensions, and prohibited items. Generally, liquids in carry-on luggage should be in containers of 100ml or less.",
-        "cash": "Most countries regulate the amount of cash you can carry across their borders without declaring it. This is typically around $10,000 USD, but can vary. Check the customs website of your destination for specifics.",
-        "restrictions": "Stay updated on the latest travel advisories and entry requirements by checking the official government websites of your destination country.",
-        "dress code": "Dress modestly, especially when visiting religious sites. Casual and comfortable clothing is usually acceptable for tourist areas. For upscale restaurants, smart casual is often expected.",
-        "alcohol": "Laws and social norms regarding alcohol vary widely. In some countries, it is readily available, while in others, it is restricted or prohibited. Be aware of local laws.",
-        "transport": "Most destinations offer public transit (buses, trains), taxis, and ride-sharing services. For more flexibility, consider renting a car.",
-        "safety": "Stay aware of your surroundings and protect your belongings. Avoid walking alone at night in unfamiliar areas. It's a good idea to have travel insurance.",
-        "places": "Explore a mix of popular tourist attractions and off-the-beaten-path gems. Research in advance to create an itinerary that matches your interests.",
-        "date format": "The correct format is YYYY-MM-DD. For example, April 1st, 2026 would be written as 2026-04-01. Note that our weather forecast is limited to the next 16 days."
+        "cash": "Most countries regulate the amount of cash you can carry. Check the customs website of your destination.",
+        "restrictions": "Stay updated on travel advisories by checking official government websites.",
+        "dress code": "Dress modestly, especially when visiting religious sites.",
+        "alcohol": "Be aware of local laws regarding alcohol consumption.",
+        "transport": "Most destinations offer public transit, taxis, and ride-sharing.",
+        "safety": "Be aware of your surroundings and have travel insurance.",
+        "places": "Research popular and off-the-beaten-path attractions.",
+        "date format": "Use YYYY-MM-DD. Our weather forecast is limited to the next 16 days.",
+        "insurance": "It is highly recommended to have travel insurance. Popular options include World Nomads, IMG, and Allianz."
     };
 
     getAdviceBtn.addEventListener('click', () => {
@@ -135,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nationality = nationalityInput.value.trim();
         const startDate = startDateInput.value.trim();
         const endDate = endDateInput.value.trim();
+        const airline = airlineInput.value.trim();
 
         if (!destination || !nationality) {
             alert('Please enter both a destination and your nationality.');
@@ -148,6 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
         getVisaInfo(destination, nationality);
         getImages(destination);
         getDosAndDonts(destination);
+        getEmbassyInfo(destination, nationality);
+        getLuggageInfo(airline);
 
         if (startDate && endDate) {
             if (isDateTooFarInFuture(startDate)) {
@@ -155,14 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 getWeather(destination, startDate, endDate);
             }
-        }
+        } 
     });
 
     askBtn.addEventListener('click', () => {
         const question = questionInput.value.toLowerCase().trim();
-        if (question) {
-            handleQuestion(question);
-        }
+        if (question) handleQuestion(question);
     });
 
     function displayAnswer(answer) {
@@ -175,102 +124,68 @@ document.addEventListener('DOMContentLoaded', () => {
         const nationality = nationalityInput.value.trim();
         const startDate = startDateInput.value.trim();
         const endDate = endDateInput.value.trim();
+        const airline = airlineInput.value.trim();
 
         const keywords = {
-            "flights": getFlightsInfo,
-            "hotel": getHotelsInfo,
-            "wear": getWeather,
-            "clothe": getWeather,
-            "pack": getWeather,
-            "visa": getVisaInfo,
-            "currency": getCountryInfo,
-            "money": getCountryInfo,
-            "emergency": getEmergencyNumbers,
-            "help": getEmergencyNumbers,
-            "dos": getDosAndDonts,
-            "don'ts": getDosAndDonts,
-            "etiquette": getDosAndDonts,
-            // Knowledge Base keywords
-            "luggage": () => displayAnswer(knowledgeBase.luggage),
-            "baggage": () => displayAnswer(knowledgeBase.luggage),
+            "flight": getFlightsInfo, "hotel": getHotelsInfo,
+            "wear": getWeather, "clothe": getWeather, "pack": getWeather,
+            "visa": getVisaInfo, "currency": getCountryInfo, "money": getCountryInfo,
+            "emergency": getEmergencyNumbers, "help": getEmergencyNumbers,
+            "dos": getDosAndDonts, "don'ts": getDosAndDonts, "etiquette": getDosAndDonts,
+            "embassy": getEmbassyInfo, "consulate": getEmbassyInfo,
+            "luggage": getLuggageInfo, "baggage": getLuggageInfo,
+            // Knowledge Base
             "cash": () => displayAnswer(knowledgeBase.cash),
             "restriction": () => displayAnswer(knowledgeBase.restrictions),
             "dress code": () => displayAnswer(knowledgeBase["dress code"]),
             "alcohol": () => displayAnswer(knowledgeBase.alcohol),
-            "drink": () => displayAnswer(knowledgeBase.alcohol),
             "transport": () => displayAnswer(knowledgeBase.transport),
-            "car": () => displayAnswer(knowledgeBase.transport),
-            "bus": () => displayAnswer(knowledgeBase.transport),
-            "train": () => displayAnswer(knowledgeBase.transport),
-            "safe": () => displayAnswer(knowledgeBase.safety),
             "safety": () => displayAnswer(knowledgeBase.safety),
             "place": () => displayAnswer(knowledgeBase.places),
-            "see": () => displayAnswer(knowledgeBase.places),
-            "do": () => displayAnswer(knowledgeBase.places),
-            "attraction": () => displayAnswer(knowledgeBase.places),
-            "date": () => displayAnswer(knowledgeBase["date format"])
+            "date": () => displayAnswer(knowledgeBase["date format"]),
+            "insurance": () => displayAnswer(knowledgeBase.insurance)
         };
 
         let action = null;
         for (const keyword in keywords) {
-            if (question.includes(keyword)) {
-                action = keywords[keyword];
-                break;
-            }
+            if (question.includes(keyword)) { action = keywords[keyword]; break; }
         }
 
         if (!action) {
-            displayAnswer("Sorry, I don't have information on that topic. Please try asking a different question.");
+            displayAnswer("Sorry, I don't have information on that topic.");
             return;
         }
 
-        // Execute the action
         if (action === getWeather) {
-            if (!destination || !startDate || !endDate) {
-                alert('To get weather-related advice, please enter a destination, start date, and end date first.');
-            } else if (isDateTooFarInFuture(startDate)){
-                 alert('The weather forecast is only available for the next 16 days. Please choose a closer date.');
-            }else {
-                getWeather(destination, startDate, endDate, true);
-            }
+            if (!destination || !startDate || !endDate) alert('Please provide destination, start date, and end date for weather advice.');
+            else if (isDateTooFarInFuture(startDate)) alert('Weather forecast is only for the next 16 days.');
+            else getWeather(destination, startDate, endDate, true);
         } else if (action === getVisaInfo) {
-            if (!destination || !nationality) {
-                alert('To get visa advice, please enter a destination and your nationality first.');
-            } else {
-                getVisaInfo(destination, nationality, true);
-            }
+            if (!destination || !nationality) alert('Please provide destination and nationality for visa advice.');
+            else getVisaInfo(destination, nationality, true);
         } else if (action === getCountryInfo) {
-            if (!destination) {
-                alert('To get currency information, please enter a destination first.');
-            } else {
-                getCountryInfo(destination, true);
-            }
+            if (!destination) alert('Please provide a destination for currency information.');
+            else getCountryInfo(destination, true);
         } else if (action === getEmergencyNumbers) {
-            if (!destination) {
-                alert('To get emergency numbers, please enter a destination first.');
-            } else {
-                getEmergencyNumbers(destination, true);
-            }
+            if (!destination) alert('Please provide a destination for emergency numbers.');
+            else getEmergencyNumbers(destination, true);
         } else if (action === getFlightsInfo) {
-            if (!destination) {
-                alert('To get flight information, please enter a destination first.');
-            } else {
-                getFlightsInfo(destination, true);
-            }
+            if (!destination) alert('Please provide a destination for flight information.');
+            else getFlightsInfo(destination, true);
         } else if (action === getHotelsInfo) {
-            if (!destination) {
-                alert('To get hotel information, please enter a destination first.');
-            } else {
-                getHotelsInfo(destination, true);
-            }
+            if (!destination) alert('Please provide a destination for hotel information.');
+            else getHotelsInfo(destination, true);
         } else if (action === getDosAndDonts) {
-            if (!destination) {
-                alert('To get cultural advice, please enter a destination first.');
-            } else {
-                getDosAndDonts(destination, true);
-            }
+            if (!destination) alert('Please provide a destination for cultural advice.');
+            else getDosAndDonts(destination, true);
+        } else if (action === getEmbassyInfo) {
+            if (!destination || !nationality) alert('Please provide destination and nationality for embassy information.');
+            else getEmbassyInfo(destination, nationality, true);
+        } else if (action === getLuggageInfo) {
+            if (!airline) alert('Please provide an airline for luggage information.');
+            else getLuggageInfo(airline, true);
         } else {
-            action(); // For knowledge base entries
+            action();
         }
     }
 
@@ -283,79 +198,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getFlightsInfo(destination, fromAsk = false) {
-        const info = `You can find flights to ${destination} on websites like <a href="https://www.google.com/flights" target="_blank">Google Flights</a>, <a href="https://www.skyscanner.com" target="_blank">Skyscanner</a>, and <a href="https://www.kayak.com" target="_blank">Kayak</a>.`;
-        if (fromAsk) {
-            displayAnswer(info);
-        } else {
-            flightsInfo.innerHTML = info;
-        }
+        const info = `Find flights to ${destination} on <a href="https://www.google.com/flights" target="_blank">Google Flights</a>, <a href="https://www.skyscanner.com" target="_blank">Skyscanner</a>, and <a href="https://www.kayak.com" target="_blank">Kayak</a>.`;
+        if (fromAsk) displayAnswer(info); else flightsInfo.innerHTML = info;
     }
 
     function getHotelsInfo(destination, fromAsk = false) {
-        const info = `You can find hotels in ${destination} on websites like <a href="https://www.booking.com" target="_blank">Booking.com</a>, <a href="https://www.airbnb.com" target="_blank">Airbnb</a>, and <a href="https://www.expedia.com" target="_blank">Expedia</a>.`;
-        if (fromAsk) {
-            displayAnswer(info);
-        } else {
-            hotelsInfo.innerHTML = info;
+        const info = `Find hotels in ${destination} on <a href="https://www.booking.com" target="_blank">Booking.com</a>, <a href="https://www.airbnb.com" target="_blank">Airbnb</a>, and <a href="https://www.expedia.com" target="_blank">Expedia</a>.`;
+        if (fromAsk) displayAnswer(info); else hotelsInfo.innerHTML = info;
+    }
+
+    function getLuggageInfo(airline, fromAsk = false) {
+        const lowerAirline = airline.toLowerCase();
+        let info = airlineLuggageData.default;
+        for (const name in airlineLuggageData) {
+            if (lowerAirline.includes(name)) {
+                info = airlineLuggageData[name];
+                break;
+            }
         }
+        if (fromAsk) displayAnswer(info); else luggageInfo.innerHTML = info;
+    }
+
+    function getEmbassyInfo(destination, nationality, fromAsk = false) {
+        const mappedNationality = nationalityMapping[nationality.toLowerCase()] || nationality;
+        const query = `${mappedNationality} embassy in ${destination}`;
+        const url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        const info = `You can find the ${mappedNationality} embassy in ${destination} by searching online. <a href="${url}" target="_blank">Click here to search.</a>`;
+        if (fromAsk) displayAnswer(info); else embassyInfo.innerHTML = info;
     }
 
     function getVisaInfo(destination, nationality, fromAsk = false) {
-        const lowerNationality = nationality.toLowerCase();
-        const mappedNationality = nationalityMapping[lowerNationality] || nationality;
+        const mappedNationality = nationalityMapping[nationality.toLowerCase()] || nationality;
         const requiresVisa = !(visaFreeData[mappedNationality] && visaFreeData[mappedNationality].some(d => destination.toLowerCase().includes(d.toLowerCase())));
-        let info;
-        if (requiresVisa) {
-            info = `As a citizen of <strong>${mappedNationality}</strong>, you will likely need a visa for <strong>${destination}</strong>. Please check the official embassy or consulate website of your destination country for the most up-to-date information.`;
-        } else {
-            info = `As a citizen of <strong>${mappedNationality}</strong>, you likely do not need a visa for short trips to <strong>${destination}</strong>. However, it is crucial to verify this with the official embassy.`;
-        }
-        if (fromAsk) {
-            displayAnswer(info);
-        } else {
-            visaInfo.innerHTML = info;
-        }
+        let info = requiresVisa ? `As a citizen of <strong>${mappedNationality}</strong>, you will likely need a visa for <strong>${destination}</strong>.` : `As a citizen of <strong>${mappedNationality}</strong>, you likely do not need a visa for short trips to <strong>${destination}</strong>.`;
+        info += " Please check the official embassy website for the most up-to-date information.";
+        if (fromAsk) displayAnswer(info); else visaInfo.innerHTML = info;
     }
 
     function getDosAndDonts(destination, fromAsk = false) {
         const lowerDestination = destination.toLowerCase();
         let advice = dosAndDontsData.default;
-
         for (const country in dosAndDontsData) {
-            if (lowerDestination.includes(country)) {
-                advice = dosAndDontsData[country];
-                break;
-            }
+            if (lowerDestination.includes(country)) { advice = dosAndDontsData[country]; break; }
         }
-        
         let info = '<strong>Dos:</strong><ul>';
         advice.dos.forEach(item => { info += `<li>${item}</li>`; });
         info += '</ul><strong>Don\'ts:</strong><ul>';
         advice.donts.forEach(item => { info += `<li>${item}</li>`; });
         info += '</ul>';
-
-        if (fromAsk) {
-            displayAnswer(info);
-        } else {
-            dosDontsInfo.innerHTML = info;
-        }
+        if (fromAsk) displayAnswer(info); else dosDontsInfo.innerHTML = info;
     }
 
     function getImages(destination) {
         const apiKey = 'ZgonpcSFd8s5CogZvcPvgr7TwCRAj1mBEsYcF5KezR78F2cBiDq2FpYM';
         const url = `https://api.pexels.com/v1/search?query=${destination}&per_page=1`;
-        fetch(url, { headers: { Authorization: apiKey } })
-            .then(response => response.json())
-            .then(data => {
-                if (data.photos.length > 0) {
-                    header.style.backgroundImage = `url(${data.photos[0].src.large2x})`;
-                } else {
-                    header.style.backgroundImage = 'linear-gradient(to right, #6a11cb, #2575fc)';
-                }
-            }).catch(error => {
-                console.error('Error fetching images:', error);
+        fetch(url, { headers: { Authorization: apiKey } }).then(response => response.json()).then(data => {
+            if (data.photos.length > 0) {
+                header.style.backgroundImage = `url(${data.photos[0].src.large2x})`;
+            } else {
                 header.style.backgroundImage = 'linear-gradient(to right, #6a11cb, #2575fc)';
-            });
+            }
+        }).catch(error => console.error('Error fetching images:', error));
     }
 
     function getWeather(destination, startDate, endDate, fromAsk = false) {
@@ -371,83 +274,58 @@ document.addEventListener('DOMContentLoaded', () => {
                             displayAnswer(advice);
                         } else {
                             clothingAdvice.innerHTML = advice;
-                            generatePackingList(weatherData.daily);
+                            generatePackingList(weatherData.daily, startDate, endDate);
                         }
                     } else {
-                        const errorMsg = 'Could not fetch a specific weather forecast for your dates. Please check the date format (YYYY-MM-DD) and try again.';
+                        const errorMsg = 'Could not fetch weather forecast. Check dates and try again.';
                         if (fromAsk) displayAnswer(errorMsg); else clothingAdvice.textContent = errorMsg;
                     }
-                }).catch(error => {
-                    console.error('Error fetching weather data:', error);
-                    const errorMsg = 'Could not fetch weather forecast. Please try again.';
-                    if (fromAsk) displayAnswer(errorMsg); else clothingAdvice.textContent = errorMsg;
-                });
+                }).catch(error => console.error('Error fetching weather data:', error));
             } else {
-                const errorMsg = 'Could not find the location for the weather forecast. Please check the destination spelling.';
+                const errorMsg = 'Could not find location for weather forecast.';
                 if (fromAsk) displayAnswer(errorMsg); else clothingAdvice.textContent = errorMsg;
             }
-        }).catch(error => {
-            console.error('Error fetching geocoding data:', error);
-            const errorMsg = 'Could not fetch location data for the weather forecast. Please try again.';
-            if (fromAsk) displayAnswer(errorMsg); else clothingAdvice.textContent = errorMsg;
-        });
+        }).catch(error => console.error('Error fetching geocoding data:', error));
     }
 
     function generateClothingAdvice(dailyWeather) {
         const avgMaxTemp = dailyWeather.temperature_2m_max.reduce((a, b) => a + b) / dailyWeather.temperature_2m_max.length;
-        const avgMinTemp = dailyWeather.temperature_2m_min.reduce((a, b) => a + b) / dailyWeather.temperature_2m_min.length;
+        let advice = '<strong>Clothing Recommendations:</strong><ul>';
+        if (avgMaxTemp > 25) advice += '<li>Pack light clothing: shorts, t-shirts, and sandals.</li>';
+        else if (avgMaxTemp > 15) advice += '<li>Pack layers: t-shirts, long-sleeved shirts, and a light jacket.</li>';
+        else advice += '<li>Pack warm clothing: sweaters, jackets, and trousers.</li>';
         const mostCommonWeatherCode = mostCommon(dailyWeather.weathercode);
         const weatherDescription = getWeatherDescription(mostCommonWeatherCode);
-        let advice = '<strong>Clothing Recommendations:</strong><ul>';
-        advice += `<li>Expect temperatures between ${avgMinTemp.toFixed(1)}°C and ${avgMaxTemp.toFixed(1)}°C.</li>`;
-        advice += `<li>The weather will be mostly ${weatherDescription}.</li>`;
-        if (avgMaxTemp > 25) {
-            advice += '<li>Pack light clothing: shorts, t-shirts, and sandals.</li>';
-        } else if (avgMaxTemp > 15) {
-            advice += '<li>Pack layers: t-shirts, long-sleeved shirts, and a light jacket.</li>';
-        } else {
-            advice += '<li>Pack warm clothing: sweaters, jackets, and trousers.</li>';
-        }
-        if (weatherDescription.includes('Rain') || weatherDescription.includes('Drizzle')) {
-            advice += '<li>A waterproof jacket and umbrella are recommended.</li>';
-        } else if (weatherDescription.includes('Snow')) {
-            advice += '<li>Pack a heavy coat, gloves, and a hat.</li>';
-        }
+        if (weatherDescription.includes('Rain')) advice += '<li>A waterproof jacket and umbrella are recommended.</li>';
+        else if (weatherDescription.includes('Snow')) advice += '<li>Pack a heavy coat, gloves, and a hat.</li>';
         advice += '</ul>';
         return advice;
     }
 
-    function generatePackingList(dailyWeather) {
-        let packingListHTML = '<ul>';
+    function generatePackingList(dailyWeather, startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+        
+        let packingListHTML = `<h4>Recommended Packing for ${duration} days:</h4><ul>`;
         const baseItems = ['Passport', 'Tickets', 'Hotel Confirmation', 'Toothbrush', 'Toothpaste', 'Phone Charger'];
-        baseItems.forEach(item => {
-            packingListHTML += `<li><input type="checkbox"> ${item}</li>`;
-        });
+        baseItems.forEach(item => packingListHTML += `<li><input type="checkbox"> ${item}</li>`);
+
         const avgMaxTemp = dailyWeather.temperature_2m_max.reduce((a, b) => a + b) / dailyWeather.temperature_2m_max.length;
-        const mostCommonWeatherCode = mostCommon(dailyWeather.weathercode);
-        const weatherDescription = getWeatherDescription(mostCommonWeatherCode);
+        let clothingItems = [];
         if (avgMaxTemp > 25) {
-            ['Shorts', 'T-shirts', 'Sandals', 'Sunscreen', 'Sunglasses', 'Hat'].forEach(item => {
-                packingListHTML += `<li><input type="checkbox"> ${item}</li>`;
-            });
+            clothingItems = [ {item: 'T-shirt', qty: duration}, {item: 'Shorts', qty: Math.ceil(duration/2)}, {item: 'Sandals', qty: 1}, {item: 'Sunscreen', qty: 1}, {item: 'Sunglasses', qty: 1}, {item: 'Hat', qty: 1} ];
         } else if (avgMaxTemp > 15) {
-            ['T-shirts', 'Long-sleeved shirts', 'Light jacket', 'Jeans'].forEach(item => {
-                packingListHTML += `<li><input type="checkbox"> ${item}</li>`;
-            });
+            clothingItems = [ {item: 'T-shirt', qty: duration}, {item: 'Long-sleeved shirt', qty: duration}, {item: 'Light jacket', qty: 1}, {item: 'Jeans', qty: Math.ceil(duration/2)} ];
         } else {
-            ['Sweaters', 'Jackets', 'Trousers', 'Scarf', 'Gloves'].forEach(item => {
-                packingListHTML += `<li><input type="checkbox"> ${item}</li>`;
-            });
+            clothingItems = [ {item: 'Sweater', qty: duration}, {item: 'Jacket', qty: 1}, {item: 'Trousers', qty: duration}, {item: 'Scarf', qty: 1}, {item: 'Gloves', qty: 1} ];
         }
-        if (weatherDescription.includes('Rain') || weatherDescription.includes('Drizzle')) {
-            ['Waterproof jacket', 'Umbrella'].forEach(item => {
-                packingListHTML += `<li><input type="checkbox"> ${item}</li>`;
-            });
-        } else if (weatherDescription.includes('Snow')) {
-            ['Winter coat', 'Boots', 'Gloves', 'Hat'].forEach(item => {
-                packingListHTML += `<li><input type="checkbox"> ${item}</li>`;
-            });
-        }
+
+        const weatherDescription = getWeatherDescription(mostCommon(dailyWeather.weathercode));
+        if (weatherDescription.includes('Rain')) clothingItems.push({item: 'Waterproof jacket', qty: 1}, {item: 'Umbrella', qty: 1});
+        if (weatherDescription.includes('Snow')) clothingItems.push({item: 'Winter coat', qty: 1}, {item: 'Boots', qty: 1});
+
+        clothingItems.forEach(item => packingListHTML += `<li><input type="checkbox"> ${item.item} (x${item.qty})</li>`);
         packingListHTML += '</ul>';
         packingList.innerHTML = packingListHTML;
     }
@@ -460,36 +338,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const currencyCode = Object.keys(country.currencies)[0];
                 const currency = country.currencies[currencyCode];
                 const info = `The local currency is the <strong>${currency.name} (${currencyCode})</strong>.`;
-                if (fromAsk) {
-                    displayAnswer(info);
-                } else {
-                    currencyInfo.innerHTML = info;
-                }
+                if (fromAsk) displayAnswer(info); else currencyInfo.innerHTML = info;
             } else {
-                const errorMsg = 'Could not find currency information for this destination.';
+                const errorMsg = 'Could not find currency information.';
                 if (fromAsk) displayAnswer(errorMsg); else currencyInfo.textContent = errorMsg;
             }
-        }).catch(error => {
-            console.error('Error fetching country data:', error);
-            const errorMsg = 'Could not fetch currency data. Please try again.';
-            if (fromAsk) displayAnswer(errorMsg); else currencyInfo.textContent = errorMsg;
-        });
+        }).catch(error => console.error('Error fetching country data:', error));
     }
 
     function getEmergencyNumbers(destination, fromAsk = false) {
-        let number = emergencyNumbersData['default'];
+        let number = emergencyNumbersData.default;
         for (const country in emergencyNumbersData) {
-            if (destination.toLowerCase().includes(country.toLowerCase())) {
-                number = emergencyNumbersData[country];
-                break;
-            }
+            if (destination.toLowerCase().includes(country.toLowerCase())) { number = emergencyNumbersData[country]; break; }
         }
         const info = `The primary emergency number is <strong>${number}</strong>.`;
-        if (fromAsk) {
-            displayAnswer(info);
-        } else {
-            emergencyNumbers.innerHTML = info;
-        }
+        if (fromAsk) displayAnswer(info); else emergencyNumbers.innerHTML = info;
     }
 
     function mostCommon(arr) {
